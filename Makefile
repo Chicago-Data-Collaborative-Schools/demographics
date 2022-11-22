@@ -1,5 +1,11 @@
+demographics.db : twentieth_day_report.csv
+	csvs-to-sqlite $^ $@
+	sqlite3 $@ < scripts/ever_students.sql
 
-twentieth_day_report.csv : membership_20th_day_2006.csv			\
+twentieth_day_report.csv : twentieth_day_report_wide.csv
+	csvcut -c year,'School ID','School','Head Start','Other PK','State PK','PK SPED','Full-Day K','Half-Day K',K,12,13,14,15,16,17,18,19,20,21,22,23,'Total' $< | python scripts/pivot_longer.py > $@
+
+twentieth_day_report_wide.csv : membership_20th_day_2006.csv			\
                            membership_20th_day_2007.csv			\
                            membership_20th_day_2008.csv			\
                            membership_20th_day_2009.csv			\
